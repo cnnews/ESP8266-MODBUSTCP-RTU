@@ -32,7 +32,7 @@ EspSoftwareSerial::UART S;//这里用到EspSoftwareSerial的软件串口库，�
 //DuplexBuf P2(&S2, &S1);
 //ModbusRTU sym;
 
-int DE_RE = 2//RE在modbus库使用而不在串口库中，使用D4(2)
+int DE_RE = 2;//RE在modbus库使用而不在串口库中，使用D4(2)
 
 ModbusRTU rtu;
 ModbusTCP tcp;
