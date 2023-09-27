@@ -10,7 +10,7 @@
 //S1.begin(19200, SWSERIAL_8N1, D1, D2, false, 256, 0);
 //..
 //}
-//目前主要问题：软串口貌似通信质量较差，超过19200的速度有比较多的错误(也可能是数据线的原因)；ESP8266报错以后不能自动重连，需要按RST复位
+//存在问题：软串口貌似通信质量较差，超过19200的速度有比较多的错误(也可能是USB-串口数据线的原因)；从站报错/丢失以后不能自动重连，需要按RST复位（已解决）
 
 #ifdef ESP8266
  #include <ESP8266WiFi.h>
@@ -71,7 +71,7 @@ Modbus::ResultCode cbTcpRaw(uint8_t* data, uint8_t len, void* custom) {
   //  tcp.errorResponce(src->ipaddr, (Modbus::FunctionCode)data[0], Modbus::EX_SLAVE_DEVICE_BUSY);
   //  return Modbus::EX_SLAVE_DEVICE_BUSY;
   //} 
-  //此节影响从站故障时的TCP响应，删除后会无响应。如不删除会在从站断线后发送TCP故障代码，但从站恢复后不能再次恢复通信
+  //此节影响从站故障时的modbusTCP响应。会在从站断线后client请求数据时发送modbusTCP故障代码，但从站恢复后不能正常恢复通信，依然发送故障代码
   //https://github.com/emelianov/modbus-esp8266/issues/198
 
   srcIp = src->ipaddr;
