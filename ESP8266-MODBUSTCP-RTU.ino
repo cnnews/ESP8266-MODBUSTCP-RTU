@@ -1,7 +1,8 @@
 //
-//实测支持多ID同时读，但由于系统是同步读写数据故性能比存储转发的要差不少。每秒大概可以处理5次请求
-//手测支持一个ID同时读最多29个(03)寄存器,超出modbus poll报"transcation id error"，窗口不停打印"TCP IP: 192.168.3.240 Fn: 03, len: 5
-//"然后只能复位ESP8266重连才可以正常运行
+//我用的硬件是nodeMCU(ESP-12F)+RSM3485ECHT,板载CH340用作下载口和诊断，另外使用CP2102N的RS485数据线连接软串口用作modbus slave的测试端口。
+//实测支持modbus poll多ID同时读modbus slave，但由于系统是同步读写数据故性能要差一些，每秒大概可以处理5次请求。
+//手测支持一个ID同时读最多29个(03)寄存器,超出modbus poll报"transcation id error"，诊断窗口不停打印"TCP IP: 192.168.3.240 Fn: 03, len: 5"
+//然后只能复位ESP8266重连才可以正常运行。
 //
 
 #ifdef ESP8266
