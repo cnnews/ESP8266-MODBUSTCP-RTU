@@ -67,10 +67,12 @@ Modbus::ResultCode cbTcpRaw(uint8_t* data, uint8_t len, void* custom) {
   Serial.print(IPAddress(src->ipaddr));
   Serial.printf(" Fn: %02X, len: %d \n\r", data[0], len);
 
-  if (transRunning) { // Note that we can't process new requests from TCP-side while waiting for responce from RTU-side.
-    tcp.errorResponce(src->ipaddr, (Modbus::FunctionCode)data[0], Modbus::EX_SLAVE_DEVICE_BUSY);
-    return Modbus::EX_SLAVE_DEVICE_BUSY;
-  }
+  //if (transRunning) { // Note that we can't process new requests from TCP-side while waiting for responce from RTU-side.
+  //  tcp.errorResponce(src->ipaddr, (Modbus::FunctionCode)data[0], Modbus::EX_SLAVE_DEVICE_BUSY);
+  //  return Modbus::EX_SLAVE_DEVICE_BUSY;
+  //} 
+  //此节影响从站故障时的TCP响应，删除后会无响应。如不删除会在从站断线后发送TCP故障代码，但从站恢复后不能再次恢复通信
+  //https://github.com/emelianov/modbus-esp8266/issues/198
 
   srcIp = src->ipaddr;
   
