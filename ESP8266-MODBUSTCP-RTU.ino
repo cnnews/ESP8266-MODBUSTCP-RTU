@@ -2,8 +2,15 @@
 //我用的硬件是nodeMCU(ESP-12F)+RSM3485ECHT,板载CH340用作下载口和诊断，另外使用CP2102N的RS485数据线连接软串口用作modbus slave的测试端口。
 //实测支持modbus poll多ID同时读modbus slave，但由于系统是同步读写数据故性能要差一些，每秒大概可以处理5次请求。
 //手测支持一个ID同时读最多29个(03)寄存器,超出modbus poll报"transcation id error"，诊断窗口不停打印"TCP IP: 192.168.3.240 Fn: 03, len: 5"
-//然后只能复位ESP8266重连才可以正常运行。
-//
+//然后只能复位ESP8266重连才可以正常运行。----原因在这里：https://github.com/emelianov/modbus-esp8266/issues/177
+//It's not about the library it's about SoftwareSerial. It's needed to be configured with larger buffer. Something like:
+//SoftwareSerial S1;
+//..
+//void setup() {
+//S1.begin(19200, SWSERIAL_8N1, D1, D2, false, 256, 0);
+//..
+//}
+//目前主要问题：报错以后不能自动重连，需要按RST
 
 #ifdef ESP8266
  #include <ESP8266WiFi.h>
@@ -110,7 +117,7 @@ void setup() {
   tcp.server(); // Initialize ModbusTCP to pracess as server
   tcp.onRaw(cbTcpRaw); // Assign raw data processing callback
   
-  S.begin(9600, SWSERIAL_8N1, 13, 15 ,false);//串口速率9600,8数据位,1停止位,无校验
+  S.begin(9600, SWSERIAL_8N1, 13, 15 ,false ,256 ,0);//串口速率9600,8数据位,1停止位,无校验
   rtu.begin(&S, DE_RE ,false);  // Specify RE_DE control pin，参数flase用来反转DE管脚的逻辑，我用的RSM3485ECHT要求低电平发送数据
   //sym.begin((Stream*)&P2);
   //sym.slave(1);
