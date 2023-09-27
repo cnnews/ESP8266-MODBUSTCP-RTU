@@ -98,7 +98,7 @@ Modbus::ResultCode cbRtuRaw(uint8_t* data, uint8_t len, void* custom) {
 
 void setup() {
   Serial.begin(115200);
-  WiFi.begin("MSSID", "PASSWORD");//这里根据自己情况改
+  WiFi.begin("SSID", "PASSWORD");//这里根据自己情况改
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.print(".");
@@ -110,8 +110,8 @@ void setup() {
   tcp.server(); // Initialize ModbusTCP to pracess as server
   tcp.onRaw(cbTcpRaw); // Assign raw data processing callback
   
-  S.begin(9600, SWSERIAL_8N1, 13, 15 ,false);
-  rtu.begin(&S, DE_RE ,false);  // Specify RE_DE control pin，flash用来反转DE管脚的逻辑，我用的ZLG RSM3485ECHT要求使用低电平发送数据
+  S.begin(9600, SWSERIAL_8N1, 13, 15 ,false);//串口速率9600,8数据位,1停止位,无校验
+  rtu.begin(&S, DE_RE ,false);  // Specify RE_DE control pin，参数flase用来反转DE管脚的逻辑，我用的RSM3485ECHT要求低电平发送数据
   //sym.begin((Stream*)&P2);
   //sym.slave(1);
   //sym.addHreg(1, 100);
